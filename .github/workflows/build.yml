@@ -21,3 +21,8 @@ jobs:
         run: yarn ergogen ergogen.yaml
       - name: Run openjscad to make the plate
         run: yarn run openjscad -o output/cases/plate.stl output/cases/plate.jscad
+      - name: Persist output
+        uses: actions/upload-artifact@v2
+        with:
+          name: output
+          path: output
