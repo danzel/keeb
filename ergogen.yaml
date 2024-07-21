@@ -1,0 +1,103 @@
+units:
+  # Proxy Spacing Variables (choc)
+  kx: cx
+  ky: cy
+  # Padding Variables
+  px: kx + 4
+  py: ky + 4
+  # Thumb Variables
+  thumbsplay: -18
+  # Default visuals look like choc
+  $default_width: cx
+  $default_height: cy
+points:
+  zones:
+    matrix:
+      key:
+        padding: 1ky
+        spread: 1kx
+      columns:
+        pinky:
+        ring:
+          key.stagger: 13
+        middle:
+          key.stagger: 10
+        index:
+          key.stagger: -10
+        inner:
+          key.stagger: -3
+      rows:
+        bottom:
+        home:
+        top:
+    thumbfan:
+      anchor:
+        ref: matrix_inner_bottom
+        shift: [-0, -25]
+      columns:
+        near:
+          key.splay: thumbsplay - 4
+        home:
+          key.spread: 19.25
+          key.splay: thumbsplay
+          key.origin: [-9.75, -9]
+        far:
+          key.spread: 19.25
+          key.splay: thumbsplay
+          key.origin: [-9.5, -9]
+      rows:
+        thumb:
+outlines:
+  keycaps:
+  # Just for testing
+  - what: rectangle
+    where: true
+    size: [kx, ky]
+    corner: 1
+  border:
+    # Trace around the outsize of the keys
+    - what: polygon
+      operation: stack
+      points:
+        - ref: matrix_pinky_top
+          shift: [-.5px, .5py]
+        - ref: matrix_ring_top
+          shift: [-.5px, .5py]
+        - ref: matrix_middle_top
+          shift: [-.5px, .5py]
+        - ref: matrix_middle_top
+          shift: [.5px, .5py]
+        - ref: matrix_index_top
+          shift: [.5px, .5py]
+        - ref: matrix_inner_top
+          shift: [.5px, .5py]
+        - ref: matrix_inner_bottom
+          shift: [.5px, -.5py]
+        - ref: thumbfan_home_thumb
+          shift: [.5px, .5py]
+        - ref: thumbfan_far_thumb
+          shift: [-.5px, .5py]
+        - ref: thumbfan_far_thumb
+          shift: [.5px, .5py]
+        - ref: thumbfan_far_thumb
+          shift: [.5px, -.5py]
+        - ref: thumbfan_far_thumb
+          shift: [-.5px, -.5py]
+        - ref: thumbfan_near_thumb
+          shift: [.5px, -.5py]
+        - ref: thumbfan_near_thumb
+          shift: [-.5px, -.5py]
+        - ref: matrix_pinky_bottom
+          shift: [-.5px, -.5py]
+  holes:
+    # Maybe should be 14mm instead
+    - what: rectangle
+      where: true
+      size: [13.8, 13.8]
+  plate:
+    - "border"
+    - "-holes"
+cases:
+  plate:
+    - name: plate
+      extrude: 1.2

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@jscad/openjscad": "git+https://github.com/ergogen/oldjscad",
+    "ergogen": "^4.1.0"
+  }
+}

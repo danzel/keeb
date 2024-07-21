@@ -1,0 +1,23 @@
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts'
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+      - name: Run ergogen
+        run: yarn ergogen ergogen.yaml
+      - name: Run openjscad to make the plate
+        run: yarn run openjscad -o output/cases/plate.stl output/cases/plate.jscad
