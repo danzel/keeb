@@ -6,7 +6,7 @@ units:
   px: kx + 4
   py: ky + 4
   # Thumb Variables
-  thumbsplay: -18
+  thumbsplay: -13
   # Default visuals look like choc
   $default_width: cx
   $default_height: cy
@@ -19,7 +19,7 @@ points:
       columns:
         pinky:
         ring:
-          key.stagger: 13
+          key.stagger: 21
         middle:
           key.stagger: 10
         index:
@@ -33,18 +33,18 @@ points:
     thumbfan:
       anchor:
         ref: matrix_inner_bottom
-        shift: [-0, -25]
+        shift: [2, -23]
       columns:
         near:
           key.splay: thumbsplay - 4
         home:
           key.spread: 19.25
           key.splay: thumbsplay
-          key.origin: [-9.75, -9]
+          key.origin: [-9.5, -6]
         far:
           key.spread: 19.25
           key.splay: thumbsplay
-          key.origin: [-9.5, -9]
+          key.origin: [-9.5, -6]
       rows:
         thumb:
 outlines:
