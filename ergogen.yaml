@@ -55,7 +55,7 @@ outlines:
     size: [kx, ky]
     corner: 1
   border:
-    # Trace around the outsize of the keys
+    # Trace around the outside of the keys
     - what: polygon
       operation: stack
       points:
@@ -90,14 +90,24 @@ outlines:
         - ref: matrix_pinky_bottom
           shift: [-.5px, -.5py]
   holes:
-    # Maybe should be 14mm instead
+  #holes that the switches fit through
     - what: rectangle
       where: true
       size: [13.8, 13.8]
+  wideholes:
+  #holes the switches and clips fit through, used to make the plate thicker where it can be
+    - what: rectangle
+      where: true
+      size: [14.7, 13.8]
   plate:
     - "border"
     - "-holes"
+  platethickner:
+    - "border"
+    - "-wideholes"
 cases:
   plate:
     - name: plate
       extrude: 1.2
+    - name: platethickner
+      extrude: 2.2
