@@ -2,13 +2,28 @@ units:
   # Proxy Spacing Variables (choc)
   kx: cx
   ky: cy
-  # Padding Variables
-  px: kx + 4
-  py: ky + 4
+  # Default visuals look like choc
+  $default_width: cx
+  $default_height: cy
   # choc switch Variables
   # ref https://github.com/josefadamcik/SofleKeyboard/issues/136#issuecomment-1043234757
   choc_grip_thickness: 1.2 # 1.3, but 1.2 seems perfect?
   choc_thick_thickness: 2.2 # From top of grip area to bottom flat area (above the legs)
+  choc_leg_thickness: 2.65
+  # How far to pad out the plate from keycap edges. Walls go around this
+  px: kx + 0
+  py: ky + 0
+  # Bottom base - This will have .15 layer height
+  # Layer height decided because of the choc leg thickness.
+  # If .75 bottom thickness is too much we could look at another number
+  # Note that the legs are shorter than the wire legs on the switches, so those will need to be trimmed
+  bottom_thickness: 0.75
+  bottom_thickness_in_wall: 1.8 # needs to be divisible by .15 (base layer height) and .2 (case layer height)
+  # Wall around outside of case
+  wall_width: 2
+  wall_width_inset: 1  # with at the bottom, allowing some overlap with the base
+  wall_thickness: choc_thick_thickness + choc_leg_thickness + bottom_thickness
+  wall_thickness_inset: wall_thickness - bottom_thickness_in_wall
   # Pi Pico Variables
   pico_w: 21
   pico_h: 51
@@ -27,9 +42,6 @@ units:
   pico_top_gap: pico_hole_offset_y + 1.3  # 1.3 is usb outside pico measurement
   # Thumb Variables
   thumbsplay: -13
-  # Default visuals look like choc
-  $default_width: cx
-  $default_height: cy
 points:
   zones:
     matrix:
@@ -109,6 +121,14 @@ outlines:
           shift: [-.5px, -.5py]
         - ref: matrix_pinky_bottom
           shift: [-.5px, -.5py]
+  _border_plus_wall:
+    - what: outline
+      name: border
+      expand: wall_width
+  _border_plus_wall_inset:
+    - what: outline
+      name: border
+      expand: wall_width_inset
   holes:
   #holes that the switches fit through
     - what: rectangle
@@ -157,16 +177,39 @@ outlines:
   plate:
     - "border"
     - "-holes"
-  platethickner:
+  platethickener:
     - "border"
     - "-wideholes"
+  wall:
+    - "_border_plus_wall"
+    - "-border"
+  wall_inset:
+    - "_border_plus_wall_inset"
+    - "-border"
+  wall_outside_inset:
+    - "_border_plus_wall"
+    - "-_border_plus_wall_inset"
 cases:
   plate:
+    # Plate that switches clip in to + thicker at areas it can be
     - name: plate
       extrude: choc_grip_thickness
-    - name: platethickner
+    - name: platethickener
       extrude: choc_thick_thickness
+
+    # Wall around the plate, less thick in inset area
+    - name: wall
+      extrude: wall_thickness_inset
+    - name: wall_outside_inset
+      extrude: wall_thickness
+
+    # Mounting poles for the pico
     - name: pico_mounting_supports
       extrude: choc_thick_thickness + pico_thickness_above_gap
     - name: pico_mounting_posts
       extrude: choc_thick_thickness + pico_thickness_above_gap + pico_pcb_thickness + 2
+
+    # TODO: Hole for USB
+    # TODO: Hole for reset button
+    # TODO: Hole for link cable
+    # TODO: Holes for case closer clips
