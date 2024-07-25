@@ -5,6 +5,26 @@ units:
   # Padding Variables
   px: kx + 4
   py: ky + 4
+  # choc switch Variables
+  # ref https://github.com/josefadamcik/SofleKeyboard/issues/136#issuecomment-1043234757
+  choc_grip_thickness: 1.2 # 1.3, but 1.2 seems perfect?
+  choc_thick_thickness: 2.2 # From top of grip area to bottom flat area (above the legs)
+  # Pi Pico Variables
+  pico_w: 21
+  pico_h: 51
+  pico_hole_offset_x: 4.8
+  pico_hole_offset_y: 2
+  pico_hole_diameter: 2.1
+  pico_hole_clearance_diameter: 3.8
+  pico_hole_x_distance: pico_w - 2 * pico_hole_offset_x
+  pico_hole_y_distance: pico_h - 2 * pico_hole_offset_y
+  pico_usb_thickness: 2.63
+  pico_usb_width: 8
+  pico_pcb_thickness: 1
+  # Pi Pico related numbers
+  pico_thickness_above_gap: 2.8 # usb_thickness rounded up to 0.2
+  pico_left_gap: 4 # How far left to move from the top left of the flat box
+  pico_top_gap: pico_hole_offset_y + 1.3  # 1.3 is usb outside pico measurement
   # Thumb Variables
   thumbsplay: -13
   # Default visuals look like choc
@@ -71,12 +91,12 @@ outlines:
           shift: [.5px, .5py]
         - ref: matrix_inner_top
           shift: [.5px, .5py]
-        - ref: matrix_inner_bottom
-          shift: [.5px, -.5py]
-        - ref: thumbfan_home_thumb
-          shift: [.5px, .5py]
-        - ref: thumbfan_far_thumb
-          shift: [-.5px, .5py]
+        # Add space for the pi pico
+        - ref: matrix_inner_top
+          shift: [.5px + pico_w + 3, .5py]
+        - ref: matrix_inner_top
+          shift: [.5px + pico_w + 3, .5py - pico_h - 19]
+        # End of space
         - ref: thumbfan_far_thumb
           shift: [.5px, .5py]
         - ref: thumbfan_far_thumb
@@ -99,6 +119,41 @@ outlines:
     - what: rectangle
       where: true
       size: [14.7, 13.8]
+  _pico_posts_template:
+    #Template for the location that the posts to mount the pico
+    #Template because we want to use this multiple times with different radius
+    #TODO: I'm not sure the overall shift is correct
+    $params: [__r__]
+    top_left:
+      what: circle
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_left_gap, .5py - pico_top_gap]
+      radius: __r__
+    top_right:
+      what: circle
+      adjust:
+        ref: matrix_inner_top
+        shift: [0.5px + pico_left_gap + pico_hole_x_distance, .5py - pico_top_gap]
+      radius: __r__
+    bottom_left:
+      what: circle
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_left_gap, .5py - pico_top_gap - pico_hole_y_distance]
+      radius: __r__
+    bottom_right:
+      what: circle
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_left_gap + pico_hole_x_distance, .5py - pico_top_gap - pico_hole_y_distance]
+      radius: __r__
+  pico_mounting_posts:
+    $extends: outlines._pico_posts_template
+    $args: [pico_hole_diameter/2]
+  pico_mounting_supports:
+    $extends: outlines._pico_posts_template
+    $args: [pico_hole_clearance_diameter/2]
   plate:
     - "border"
     - "-holes"
@@ -108,6 +163,10 @@ outlines:
 cases:
   plate:
     - name: plate
-      extrude: 1.2
+      extrude: choc_grip_thickness
     - name: platethickner
-      extrude: 2.2
+      extrude: choc_thick_thickness
+    - name: pico_mounting_supports
+      extrude: choc_thick_thickness + pico_thickness_above_gap
+    - name: pico_mounting_posts
+      extrude: choc_thick_thickness + pico_thickness_above_gap + pico_pcb_thickness + 2
