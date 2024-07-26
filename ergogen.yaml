@@ -50,8 +50,12 @@ units:
   pico_thickness_above_gap: 1.4 # ^^
   pico_left_gap: 1 # How far left to move from the top left of the flat box
   pico_top_gap: 0 # TODO: May need some top padding
-
+  #Misc
   link_cable_hole_size: 3.4
+  #Clip for holding sides together
+  clip_wall_cut: wall_width - wall_width_inset
+  clip_wall_inset: 1
+  clip_wall_length: 5
   # Thumb Variables
   thumbsplay: -13
 points:
@@ -207,7 +211,58 @@ outlines:
       size: [wall_width, link_cable_hole_size]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 3 + wall_width/2, .5py - pico_h - 8]
+        shift: [.5px + pico_w + 3 + wall_width/2, .5py - pico_h - 7]
+  clip_walls_cut:
+    # Inner top (next to pico)
+    - what: rectangle
+      size: [clip_wall_cut, clip_wall_length]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 3 + wall_width_inset + clip_wall_cut/2, .5py - 10]
+    # Inner bottom (below link cable hole)
+    - what: rectangle
+      size: [clip_wall_cut, clip_wall_length]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 3 + wall_width_inset + clip_wall_cut/2, .5py - pico_h - 14]
+    # Outer top
+    - what: rectangle
+      size: [clip_wall_cut, clip_wall_length]
+      adjust:
+        ref: matrix_pinky_top
+        shift: [-.5px - wall_width_inset - clip_wall_cut/2, .5py - 8]
+    # Outer bottom
+    - what: rectangle
+      size: [clip_wall_cut, clip_wall_length]
+      adjust:
+        ref: matrix_pinky_top
+        shift: [-.5px - wall_width_inset - clip_wall_cut/2, .5py - 44]
+  clip_plate_cut:
+    #TODO: There is a good chance the math in here is wrong but it works because variables are the same
+    # Inner top (next to pico)
+    - what: rectangle
+      size: [wall_width + clip_wall_inset, clip_wall_length]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 3 + clip_wall_inset/2, .5py - 10]
+    # Inner bottom (below link cable hole)
+    - what: rectangle
+      size: [wall_width + clip_wall_inset, clip_wall_length]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 3 + clip_wall_inset/2, .5py - pico_h - 14]
+    # Outer top
+    - what: rectangle
+      size: [wall_width + clip_wall_inset, clip_wall_length]
+      adjust:
+        ref: matrix_pinky_top
+        shift: [-.5px - wall_width_inset + clip_wall_inset/2, .5py - 8]
+    # Outer bottom
+    - what: rectangle
+      size: [wall_width + clip_wall_inset, clip_wall_length]
+      adjust:
+        ref: matrix_pinky_top
+        shift: [-.5px - wall_width_inset + clip_wall_inset/2, .5py - 44]
   plate:
     - "border"
     - "-holes"
@@ -258,4 +313,10 @@ cases:
     - name: link_cable_hole
       extrude: choc_thick_thickness
 
-    # TODO: Holes for case closer clips
+    # Holes for case closer clips
+    - name: clip_walls_cut
+      extrude: wall_thickness
+      operation: subtract
+    - name: clip_plate_cut
+      extrude: choc_thick_thickness
+      operation: subtract
