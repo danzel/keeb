@@ -17,6 +17,8 @@ units:
   # Layer height decided because of the choc leg thickness.
   # If .75 bottom thickness is too much we could look at another number
   # Note that the legs are shorter than the wire legs on the switches, so those will need to be trimmed
+  case_layer_height: 0.2
+  bottom_layer_height: 0.15
   bottom_thickness: 0.75
   bottom_thickness_in_wall: 1.8 # needs to be divisible by .15 (base layer height) and .2 (case layer height)
   # Wall around outside of case
@@ -33,13 +35,20 @@ units:
   pico_hole_clearance_diameter: 3.8
   pico_hole_x_distance: pico_w - 2 * pico_hole_offset_x
   pico_hole_y_distance: pico_h - 2 * pico_hole_offset_y
-  pico_usb_thickness: 2.63
+  pico_usb_thickness: 2.63 + .2 # .2 is the lip underneath
   pico_usb_width: 8
+  pico_usb_height_on_pcb: 4.3 # Measured
   pico_pcb_thickness: 1
+  # Where the reset button is from the edge of the PCB, roughly measured in freecad
+  pico_reset_x: 5.4 - 0.3 #5.4
+  pico_reset_y: 9.87 - 0.3 #9.87
+  pico_reset_width: 3.2 + 0.6 # 3.2
+  pico_reset_height: 4.25 + 0.6 # 4.25
   # Pi Pico related numbers
-  pico_thickness_above_gap: 2.8 # usb_thickness rounded up to 0.2
-  pico_left_gap: 4 # How far left to move from the top left of the flat box
-  pico_top_gap: pico_hole_offset_y + 1.3  # 1.3 is usb outside pico measurement
+  # the tallest component on the pico other than the reset button and USB is 1.25mm high, round that up to nearest .2 (case layer height)
+  pico_thickness_above_gap: 1.4 # ^^
+  pico_left_gap: 1 # How far left to move from the top left of the flat box
+  pico_top_gap: 0 # TODO: May need some top padding
   # Thumb Variables
   thumbsplay: -13
 points:
@@ -142,31 +151,30 @@ outlines:
   _pico_posts_template:
     #Template for the location that the posts to mount the pico
     #Template because we want to use this multiple times with different radius
-    #TODO: I'm not sure the overall shift is correct
     $params: [__r__]
     top_left:
       what: circle
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_left_gap, .5py - pico_top_gap]
+        shift: [.5px + pico_left_gap + pico_hole_offset_x, .5py - pico_hole_offset_y - pico_top_gap]
       radius: __r__
     top_right:
       what: circle
       adjust:
         ref: matrix_inner_top
-        shift: [0.5px + pico_left_gap + pico_hole_x_distance, .5py - pico_top_gap]
+        shift: [0.5px + pico_left_gap + pico_hole_offset_x + pico_hole_x_distance, .5py - pico_hole_offset_y - pico_top_gap]
       radius: __r__
     bottom_left:
       what: circle
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_left_gap, .5py - pico_top_gap - pico_hole_y_distance]
+        shift: [.5px + pico_left_gap + pico_hole_offset_x, .5py - pico_hole_offset_y - pico_top_gap - pico_hole_y_distance]
       radius: __r__
     bottom_right:
       what: circle
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_hole_x_distance, .5py - pico_top_gap - pico_hole_y_distance]
+        shift: [.5px + pico_left_gap + pico_hole_offset_x + pico_hole_x_distance, .5py - pico_hole_offset_y - pico_top_gap - pico_hole_y_distance]
       radius: __r__
   pico_mounting_posts:
     $extends: outlines._pico_posts_template
@@ -174,6 +182,20 @@ outlines:
   pico_mounting_supports:
     $extends: outlines._pico_posts_template
     $args: [pico_hole_clearance_diameter/2]
+  pico_usb_hole:
+    #hole for where the usb port comes through the case
+    - what: rectangle
+      size: [pico_usb_width, pico_usb_height_on_pcb + pico_top_gap + wall_thickness]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_left_gap + pico_w / 2, .5py - pico_top_gap]
+  pico_reset_hole:
+    #hole for where the reset button comes through the case
+    - what: rectangle
+      size: [pico_reset_width, pico_reset_height]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_left_gap + pico_reset_x + sx/2, .5py - pico_top_gap - pico_reset_y - sy/2]
   plate:
     - "border"
     - "-holes"
@@ -189,6 +211,9 @@ outlines:
   wall_outside_inset:
     - "_border_plus_wall"
     - "-_border_plus_wall_inset"
+  case_pico_holes:
+    - "pico_usb_hole"
+    - "pico_reset_hole"
 cases:
   plate:
     # Plate that switches clip in to + thicker at areas it can be
@@ -207,9 +232,12 @@ cases:
     - name: pico_mounting_supports
       extrude: choc_thick_thickness + pico_thickness_above_gap
     - name: pico_mounting_posts
-      extrude: choc_thick_thickness + pico_thickness_above_gap + pico_pcb_thickness + 2
+      extrude: wall_thickness - case_layer_height # Reduced a bit because the matching piece isn't quite tall enough (0.1mm short) based on the layer height
 
-    # TODO: Hole for USB
-    # TODO: Hole for reset button
+    # Holes for pico bits to pop through (USB, Reset)
+    - name: case_pico_holes
+      extrude: choc_thick_thickness + pico_thickness_above_gap + pico_usb_thickness
+      operation: subtract 
+
     # TODO: Hole for link cable
     # TODO: Holes for case closer clips
