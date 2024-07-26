@@ -38,7 +38,7 @@ units:
   pico_usb_thickness: 2.63 # above pcb
   pico_usb_thickness_into_pcb: .4
   pico_usb_width: 8.2 # Rounded up from 8
-  pico_usb_height_on_pcb: 4.3 # Measured
+  pico_usb_height_on_pcb: 4.3 + .3 # Measured as 4.3
   pico_pcb_thickness: 1
   # Where the reset button is from the edge of the PCB, roughly measured in freecad
   pico_reset_x: 5.4 - 0.3 #5.4
@@ -192,10 +192,10 @@ outlines:
   pico_usb_hole:
     #hole for where the usb port comes through the case
     - what: rectangle
-      size: [pico_usb_width, pico_usb_height_on_pcb + pico_top_gap + wall_thickness]
+      size: [pico_usb_width, pico_usb_height_on_pcb + pico_top_gap + wall_width]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_w / 2, .5py - pico_top_gap]
+        shift: [.5px + pico_left_gap + pico_w / 2, .5py - sy/2 + wall_width]
   pico_reset_hole:
     #hole for where the reset button comes through the case
     #TODO: Can't mirror this part because the hole isn't centered on the PCB, will need another case for it
@@ -208,10 +208,10 @@ outlines:
     # Size is measured off a random usb mini cable
     # Positioned near the bottom of the long inner wall
     - what: rectangle
-      size: [wall_width, link_cable_hole_size]
+      size: [wall_width + 5, link_cable_hole_size]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 3 + wall_width/2, .5py - pico_h - 7]
+        shift: [.5px + pico_w + 3 + wall_width - sx/2, .5py - pico_h - 7]
   clip_walls_cut:
     # Inner top (next to pico)
     - what: rectangle
@@ -308,10 +308,10 @@ cases:
 
     # Hole for link cable (Remove the hole then add back the plate above it)
     - name: link_cable_hole
-      extrude: choc_thick_thickness + link_cable_hole_size
+      extrude: choc_grip_thickness + link_cable_hole_size
       operation: subtract
     - name: link_cable_hole
-      extrude: choc_thick_thickness
+      extrude: choc_grip_thickness
 
     # Holes for case closer clips
     - name: clip_walls_cut
@@ -319,4 +319,30 @@ cases:
       operation: subtract
     - name: clip_plate_cut
       extrude: choc_thick_thickness
+      operation: subtract
+  base:
+    # Base of the case
+    - name: border
+      extrude: bottom_thickness
+
+    # Wall around the plate, goes inside the outer wall of the case
+    - name: wall_inset
+      extrude: bottom_thickness_in_wall
+    
+    # Bottom pole support for pico
+    - name: pico_mounting_supports
+      extrude: wall_thickness - choc_thick_thickness - pico_thickness_above_gap - pico_pcb_thickness
+    # Hole where the pico posts come in
+    - name: pico_mounting_posts
+      extrude: wall_thickness - choc_thick_thickness - pico_thickness_above_gap - pico_pcb_thickness
+      operation: subtract
+
+    # TODO link cable??
+
+    # Holes for case closer clips
+    - name: clip_walls_cut
+      extrude: wall_thickness
+      operation: subtract
+    - name: clip_plate_cut
+      extrude: bottom_thickness
       operation: subtract
