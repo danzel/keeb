@@ -121,9 +121,9 @@ outlines:
           shift: [.5px, .5py]
         # Add space for the pi pico
         - ref: matrix_inner_top
-          shift: [.5px + pico_w + 3, .5py]
+          shift: [.5px + pico_w + 7, .5py]
         - ref: matrix_inner_top
-          shift: [.5px + pico_w + 3, .5py - pico_h - 19]
+          shift: [.5px + pico_w + 7, .5py - pico_h - 23]
         # End of space
         - ref: thumbfan_far_thumb
           shift: [.5px, .5py]
@@ -211,20 +211,20 @@ outlines:
       size: [wall_width + 5, link_cable_hole_size]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 3 + wall_width - sx/2, .5py - pico_h - 7]
+        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h - 7]
   clip_walls_cut:
     # Inner top (next to pico)
     - what: rectangle
       size: [clip_wall_cut, clip_wall_length]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 3 + wall_width_inset + clip_wall_cut/2, .5py - 10]
+        shift: [.5px + pico_w + 7 + wall_width_inset + clip_wall_cut/2, .5py - 10]
     # Inner bottom (below link cable hole)
     - what: rectangle
       size: [clip_wall_cut, clip_wall_length]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 3 + wall_width_inset + clip_wall_cut/2, .5py - pico_h - 14]
+        shift: [.5px + pico_w + 7 + wall_width_inset + clip_wall_cut/2, .5py - pico_h - 14]
     # Outer top
     - what: rectangle
       size: [clip_wall_cut, clip_wall_length]
@@ -244,13 +244,13 @@ outlines:
       size: [wall_width + clip_wall_inset, clip_wall_length]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 3 + clip_wall_inset/2, .5py - 10]
+        shift: [.5px + pico_w + 7 + clip_wall_inset/2, .5py - 10]
     # Inner bottom (below link cable hole)
     - what: rectangle
       size: [wall_width + clip_wall_inset, clip_wall_length]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 3 + clip_wall_inset/2, .5py - pico_h - 14]
+        shift: [.5px + pico_w + 7 + clip_wall_inset/2, .5py - pico_h - 14]
     # Outer top
     - what: rectangle
       size: [wall_width + clip_wall_inset, clip_wall_length]
