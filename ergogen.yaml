@@ -186,6 +186,10 @@ outlines:
   pico_mounting_posts:
     $extends: outlines._pico_posts_template
     $args: [pico_hole_diameter/2]
+  pico_mounting_posts_wider:
+    #wider version for the base holes, if they are the same size they don't fit together
+    $extends: outlines._pico_posts_template
+    $args: [pico_hole_diameter/2 + 0.1]
   pico_mounting_supports:
     $extends: outlines._pico_posts_template
     $args: [pico_hole_clearance_diameter/2]
@@ -338,7 +342,7 @@ cases:
     - name: pico_mounting_supports
       extrude: wall_thickness - choc_thick_thickness - pico_thickness_above_gap - pico_pcb_thickness
     # Hole where the pico posts come in
-    - name: pico_mounting_posts
+    - name: pico_mounting_posts_wider
       extrude: wall_thickness - choc_thick_thickness - pico_thickness_above_gap - pico_pcb_thickness
       operation: subtract
 
