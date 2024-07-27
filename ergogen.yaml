@@ -198,12 +198,17 @@ outlines:
         shift: [.5px + pico_left_gap + pico_w / 2, .5py - sy/2 + wall_width]
   pico_reset_hole:
     #hole for where the reset button comes through the case
-    #TODO: Can't mirror this part because the hole isn't centered on the PCB, will need another case for it
+    #Can't just mirror this part because the it is offset, need a case export with each of the below
     - what: rectangle
       size: [pico_reset_width, pico_reset_height]
       adjust:
         ref: matrix_inner_top
         shift: [.5px + pico_left_gap + pico_reset_x + sx/2, .5py - pico_top_gap - pico_reset_y - sy/2]
+    - what: rectangle
+      size: [pico_reset_width, pico_reset_height]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_left_gap + pico_w - pico_reset_x - sx/2, .5py - pico_top_gap - pico_reset_y - sy/2]
   link_cable_hole:
     # Size is measured off a random usb mini cable
     # Positioned near the bottom of the long inner wall
