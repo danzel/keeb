@@ -325,7 +325,7 @@ cases:
     - name: pico_mounting_supports
       extrude: choc_grip_thickness + pico_thickness_above_gap
     - name: pico_mounting_posts
-      extrude: wall_thickness - case_layer_height # Reduced a bit because the matching piece isn't quite tall enough (0.1mm short) based on the layer height
+      extrude: wall_thickness
 
     # Holes for pico bits to pop through (USB, Reset)
     - name: case_pico_holes
