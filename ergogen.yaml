@@ -49,7 +49,7 @@ units:
   # the tallest component on the pico other than the reset button and USB is 1.25mm high, round that up to nearest .2 (case layer height)
   pico_thickness_above_gap: 1.4 # ^^
   pico_left_gap: 1 # How far left to move from the top left of the flat box
-  pico_top_gap: 0 # TODO: May need some top padding
+  pico_top_gap: 0.5 # TODO: May need some top padding
   #Misc
   link_cable_hole_size: 3.4
   #Clip for holding sides together
