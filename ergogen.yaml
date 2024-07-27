@@ -13,14 +13,15 @@ units:
   # How far to pad out the plate from keycap edges. Walls go around this
   px: kx + 0
   py: ky + 0
-  # Bottom base - This will have .15 layer height
+  # Bottom base - This will have .15 layer height (initial layer .2)
   # Layer height decided because of the choc leg thickness.
-  # If .75 bottom thickness is too much we could look at another number
-  # Note that the legs are shorter than the wire legs on the switches, so those will need to be trimmed
+  # If .35 bottom thickness is too little we could look at another number (Have to go up .6?, or initial layer 0.15)
+  # Note that the legs are shorter than the wire legs on the switches, so the wire legs will need to be trimmed
   case_layer_height: 0.2
   bottom_layer_height: 0.15
-  bottom_thickness: 0.75
-  bottom_thickness_in_wall: 1.8 # needs to be divisible by .15 (base layer height) and .2 (case layer height)
+  bottom_thickness: 0.35
+  bottom_thickness_in_wall: 2.0 # needs to be divisible by: (this -.2 / .15) and (this / .2)
+  #                           (initial layer height, base layer height) and (case layer height)
   # Wall around outside of case
   wall_width: 2
   wall_width_inset: 1  # with at the bottom, allowing some overlap with the base
@@ -55,6 +56,7 @@ units:
   #Clip for holding sides together
   clip_wall_cut: wall_width - wall_width_inset
   clip_wall_inset: 1
+  clip_wall_bottom_thickness: .95 # .2 + 5 * 0.15
   clip_wall_length: 5
   # Thumb Variables
   thumbsplay: -13
@@ -368,5 +370,5 @@ cases:
       extrude: wall_thickness
       operation: subtract
     - name: clip_plate_cut
-      extrude: bottom_thickness
+      extrude: clip_wall_bottom_thickness
       operation: subtract
