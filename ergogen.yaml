@@ -155,6 +155,13 @@ outlines:
     - what: rectangle
       where: true
       size: [14.7, 13.8]
+  pico_thin_area:
+    #Area around the pico that is thinner than the rest of the plate to give room for wiring
+    - what: rectangle
+      size: [pico_w + 4, pico_h + 4]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_left_gap + sx / 2 - 2, .5py - sy/2]
   _pico_posts_template:
     #Template for the location that the posts to mount the pico
     #Template because we want to use this multiple times with different radius
@@ -297,6 +304,14 @@ cases:
       extrude: choc_grip_thickness
     - name: platethickener
       extrude: choc_thick_thickness
+    
+    # Make the pico thin area thinner by cutting and re-adding (doing this in platethickener didn't work)
+    - name: pico_thin_area
+      extrude: choc_thick_thickness
+      operation: subtract
+    - name: pico_thin_area
+      extrude: choc_grip_thickness
+
 
     # Wall around the plate, less thick in inset area
     - name: wall
@@ -306,13 +321,13 @@ cases:
 
     # Mounting poles for the pico
     - name: pico_mounting_supports
-      extrude: choc_thick_thickness + pico_thickness_above_gap
+      extrude: choc_grip_thickness + pico_thickness_above_gap
     - name: pico_mounting_posts
       extrude: wall_thickness - case_layer_height # Reduced a bit because the matching piece isn't quite tall enough (0.1mm short) based on the layer height
 
     # Holes for pico bits to pop through (USB, Reset)
     - name: case_pico_holes
-      extrude: choc_thick_thickness + pico_thickness_above_gap + pico_usb_thickness_into_pcb
+      extrude: choc_grip_thickness + pico_thickness_above_gap + pico_usb_thickness_into_pcb
       operation: subtract 
 
     # Hole for link cable (Remove the hole then add back the plate above it)
@@ -340,10 +355,10 @@ cases:
     
     # Bottom pole support for pico
     - name: pico_mounting_supports
-      extrude: wall_thickness - choc_thick_thickness - pico_thickness_above_gap - pico_pcb_thickness
+      extrude: wall_thickness - choc_grip_thickness - pico_thickness_above_gap - pico_pcb_thickness
     # Hole where the pico posts come in
     - name: pico_mounting_posts_wider
-      extrude: wall_thickness - choc_thick_thickness - pico_thickness_above_gap - pico_pcb_thickness
+      extrude: wall_thickness - choc_grip_thickness - pico_thickness_above_gap - pico_pcb_thickness
       operation: subtract
 
     # TODO link cable??
