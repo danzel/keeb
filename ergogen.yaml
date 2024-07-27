@@ -36,7 +36,7 @@ units:
   pico_hole_x_distance: pico_w - 2 * pico_hole_offset_x
   pico_hole_y_distance: pico_h - 2 * pico_hole_offset_y
   pico_usb_thickness: 2.63 # above pcb
-  pico_usb_thickness_into_pcb: .4
+  pico_usb_thickness_into_pcb: .6
   pico_usb_width: 8.2 # Rounded up from 8
   pico_usb_height_on_pcb: 4.3 + .3 # Measured as 4.3
   pico_pcb_thickness: 1
