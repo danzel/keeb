@@ -15,11 +15,11 @@ units:
   py: ky + 0
   # Bottom base - This will have .15 layer height (initial layer .2)
   # Layer height decided because of the choc leg thickness.
-  # If .35 bottom thickness is too little we could look at another number (Have to go up .6?, or initial layer 0.15)
+  # Bottom thickness has to be adjusted in 0.6 increments. 0.35 seems too thin so 0.95 it is
   # Note that the legs are shorter than the wire legs on the switches, so the wire legs will need to be trimmed
   case_layer_height: 0.2
   bottom_layer_height: 0.15
-  bottom_thickness: 0.35
+  bottom_thickness: 0.95
   bottom_thickness_in_wall: 2.0 # needs to be divisible by: (this -.2 / .15) and (this / .2)
   #                           (initial layer height, base layer height) and (case layer height)
   # Wall around outside of case
