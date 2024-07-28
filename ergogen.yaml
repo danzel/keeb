@@ -329,7 +329,7 @@ cases:
 
     # Holes for pico bits to pop through (USB, Reset)
     - name: case_pico_holes
-      extrude: choc_grip_thickness + pico_thickness_above_gap + pico_usb_thickness_into_pcb
+      extrude: wall_thickness_inset
       operation: subtract 
 
     # Hole for link cable (Remove the hole then add back the plate above it)
