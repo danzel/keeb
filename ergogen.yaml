@@ -111,14 +111,22 @@ outlines:
       points:
         - ref: matrix_pinky_top
           shift: [-.5px, .5py]
+        - ref: matrix_pinky_top
+          shift: [.5px, .5py]
         - ref: matrix_ring_top
           shift: [-.5px, .5py]
+        - ref: matrix_ring_top
+          shift: [.5px, .5py]
         - ref: matrix_middle_top
           shift: [-.5px, .5py]
         - ref: matrix_middle_top
           shift: [.5px, .5py]
         - ref: matrix_index_top
+          shift: [-.5px, .5py]
+        - ref: matrix_index_top
           shift: [.5px, .5py]
+        - ref: matrix_inner_top
+          shift: [-.5px, .5py]
         - ref: matrix_inner_top
           shift: [.5px, .5py]
         # Add space for the pi pico
@@ -137,6 +145,20 @@ outlines:
           shift: [.5px, -.5py]
         - ref: thumbfan_near_thumb
           shift: [-.5px, -.5py]
+        - ref: matrix_index_bottom
+          shift: [.5px, -.5py]
+        - ref: matrix_index_bottom
+          shift: [-.5px, -.5py]
+        - ref: matrix_middle_bottom
+          shift: [.5px, -.5py]
+        - ref: matrix_middle_bottom
+          shift: [-.5px, -.5py]
+        - ref: matrix_ring_bottom
+          shift: [.5px, -.5py]
+        - ref: matrix_ring_bottom
+          shift: [-.5px, -.5py]
+        - ref: matrix_pinky_bottom
+          shift: [.5px, -.5py]
         - ref: matrix_pinky_bottom
           shift: [-.5px, -.5py]
   _border_plus_wall:
