@@ -23,8 +23,8 @@ units:
   bottom_thickness_in_wall: 2.0 # needs to be divisible by: (this -.2 / .15) and (this / .2)
   #                           (initial layer height, base layer height) and (case layer height)
   # Wall around outside of case
-  wall_width: 2
-  wall_width_inset: 1  # with at the bottom, allowing some overlap with the base
+  wall_width: 4
+  wall_width_inset: 2  # width at the bottom, allowing some overlap with the base
   wall_thickness: choc_thick_thickness + choc_leg_thickness + bottom_thickness
   wall_thickness_inset: wall_thickness - bottom_thickness_in_wall
   # Pi Pico Variables
@@ -55,7 +55,7 @@ units:
   link_cable_hole_size: 3.4
   #Clip for holding sides together
   clip_wall_cut: wall_width - wall_width_inset
-  clip_wall_inset: 1
+  clip_wall_inset: 1 #How much grip area on the inside of the wall
   clip_wall_bottom_thickness: .95 # .2 + 5 * 0.15
   clip_wall_length: 5
   # Thumb Variables
@@ -284,13 +284,13 @@ outlines:
       size: [wall_width + clip_wall_inset, clip_wall_length]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + clip_wall_inset/2, .5py - 10]
+        shift: [.5px + pico_w + 7 + (wall_width - clip_wall_inset) /2 , .5py - 10]
     # Inner bottom (below link cable hole)
     - what: rectangle
       size: [wall_width + clip_wall_inset, clip_wall_length]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + clip_wall_inset/2, .5py - pico_h - 14]
+        shift: [.5px + pico_w + 7 + (wall_width - clip_wall_inset) /2 , .5py - pico_h - 14]
     # Outer top
     - what: rectangle
       size: [wall_width + clip_wall_inset, clip_wall_length]
