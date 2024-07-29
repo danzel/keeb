@@ -51,6 +51,13 @@ units:
   pico_thickness_above_gap: 1.4 # ^^
   pico_left_gap: 1 # How far left to move from the top left of the flat box
   pico_top_gap: 0.5 # TODO: May need some top padding
+  # holes and poles that hold the layers apart. Numbers stolen from pico_hole_diameter
+  throughpost_pole_radius: 1
+  throughpost_support_radius: 1.8
+  throughpost_hole_radius: throughpost_pole_radius + 0.1
+  throughpost_x_move: 0.34
+  throughpost_support_top: 3.2 # These two need to add up to wall_thickness
+  throughpost_support_bottom: 2.6
   #Misc
   link_cable_hole_size: 3.4
   #Clip for holding sides together
@@ -220,7 +227,7 @@ outlines:
   pico_mounting_posts_wider:
     #wider version for the base holes, if they are the same size they don't fit together
     $extends: outlines._pico_posts_template
-    $args: [pico_hole_diameter/2 + 0.15]
+    $args: [pico_hole_diameter/2 + 0.1]
   pico_mounting_supports:
     $extends: outlines._pico_posts_template
     $args: [pico_hole_clearance_diameter/2]
@@ -244,6 +251,67 @@ outlines:
       adjust:
         ref: matrix_inner_top
         shift: [.5px + pico_left_gap + pico_w - pico_reset_x - sx/2, .5py - pico_top_gap - pico_reset_y - sy/2]
+  _throughposts_template:
+    #Template for the location that the posts that hold the case and base apart
+    #Template because we want to use this multiple times with different radius
+    $params: [__r__]
+    pink_top:
+      what: circle
+      adjust:
+        ref: matrix_pinky_top
+        shift: [.5px - throughpost_x_move, -.5py]
+      radius: __r__
+    ring_top:
+      what: circle
+      adjust:
+        ref: matrix_ring_top
+        shift: [.5px - throughpost_x_move, -.5py]
+      radius: __r__
+    ring_home:
+      what: circle
+      adjust:
+        ref: matrix_ring_home
+        shift: [.5px - throughpost_x_move, -.5py]
+      radius: __r__
+    middle_top:
+      what: circle
+      adjust:
+        ref: matrix_middle_top
+        shift: [.5px - throughpost_x_move, -.5py]
+      radius: __r__
+    middle_home:
+      what: circle
+      adjust:
+        ref: matrix_middle_home
+        shift: [.5px - throughpost_x_move, -.5py]
+      radius: __r__
+    index_top:
+      what: circle
+      adjust:
+        ref: matrix_index_top
+        shift: [.5px - throughpost_x_move, -.5py]
+      radius: __r__
+    index_home:
+      what: circle
+      adjust:
+        ref: matrix_index_home
+        shift: [.5px - throughpost_x_move, -.5py]
+      radius: __r__
+    near_thumb:
+      what: circle
+      adjust:
+        ref: thumbfan_near_thumb
+        shift: [.5px - throughpost_x_move, .5py]
+      radius: __r__
+  throughpost_post:
+    $extends: outlines._throughposts_template
+    $args: [throughpost_pole_radius]
+  throughpost_support:
+    $extends: outlines._throughposts_template
+    $args: [throughpost_support_radius]
+  throughpost_hole:
+    $extends: outlines._throughposts_template
+    $args: [throughpost_hole_radius]
   link_cable_hole:
     # Size is measured off a random usb mini cable
     # Positioned near the bottom of the long inner wall
@@ -348,6 +416,13 @@ cases:
       extrude: choc_grip_thickness + pico_thickness_above_gap
     - name: pico_mounting_posts
       extrude: wall_thickness
+    
+    # Throughposts (top to bottom poles)
+    - name: throughpost_post
+      extrude: wall_thickness
+    - name: throughpost_support
+      extrude: throughpost_support_top
+
 
     # Holes for pico bits to pop through (USB, Reset)
     - name: case_pico_holes
@@ -383,6 +458,13 @@ cases:
     # Hole where the pico posts come in
     - name: pico_mounting_posts_wider
       extrude: wall_thickness - choc_grip_thickness - pico_thickness_above_gap - pico_pcb_thickness
+      operation: subtract
+    
+    # Throughposts (top to bottom poles)
+    - name: throughpost_support
+      extrude: throughpost_support_bottom
+    - name: throughpost_hole
+      extrude: wall_thickness
       operation: subtract
 
     # TODO link cable??
