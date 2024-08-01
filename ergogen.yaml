@@ -69,7 +69,7 @@ units:
   throughpost_support_top: 3.2 # These two need to add up to wall_thickness
   throughpost_support_bottom: 2.6
   #Misc
-  link_cable_hole_size: 3.4
+  link_cable_hole_size: 10.4
   #Clip for holding sides together
   clip_wall_cut: wall_width - wall_width_inset
   clip_wall_inset: 1 #How much grip area on the inside of the wall
@@ -361,13 +361,13 @@ outlines:
       adjust:
         shift: [-choc_side_pin_x_offset, -choc_side_pin_y_offset]
   link_cable_hole:
-    # Size is measured off a random usb mini cable
-    # Positioned near the bottom of the long inner wall
+    # Size is for a 4 block of jumpers (.1" pins)
+    # That can be connected with this https://www.digikey.co.nz/en/products/detail/adafruit-industries-llc/4936/14552171
     - what: rectangle
       size: [wall_width + 5, link_cable_hole_size]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h - 7]
+        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + 7]
   clip_walls_cut:
     # Inner top (next to pico)
     - what: rectangle
