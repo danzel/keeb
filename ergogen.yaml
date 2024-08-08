@@ -68,8 +68,17 @@ units:
   throughpost_x_move: 0.34
   throughpost_support_top: 3.2 # These two need to add up to wall_thickness
   throughpost_support_bottom: 2.6
-  #Misc
-  link_cable_hole_size: 10.4
+
+  #hole and support for the jumper header for the link cable
+  # Size is for a 4 block of jumpers (.1" pins)
+  # That can be connected with this https://www.digikey.co.nz/en/products/detail/adafruit-industries-llc/4936/14552171
+  jumper_width: 10.5 # Going along the edge of the wall
+  jumper_thickness: 2.6 # Going from desk to sky (Rounded up from 2.5)
+  jumper_depth: 2.7 # Going from wall in to the case, the plug is thicker than the pins
+  jumper_depth_extra_inside: 3 # Extra depth inside the case for the ends of the header pins
+  jumper_support_depth: 1 # How long of a support we can put on either side to hold it in place without getting in the way of the pins/cable end
+  jumper_support_thickness: .8 # How thick the support should be (going towards the pins on each side) (Rounded down from .9)
+
   #Clip for holding sides together
   clip_wall_cut: wall_width - wall_width_inset
   clip_wall_inset: 1 #How much grip area on the inside of the wall
@@ -360,14 +369,64 @@ outlines:
       radius: choc_pin_diameter / 2
       adjust:
         shift: [-choc_side_pin_x_offset, -choc_side_pin_y_offset]
-  link_cable_hole:
-    # Size is for a 4 block of jumpers (.1" pins)
-    # That can be connected with this https://www.digikey.co.nz/en/products/detail/adafruit-industries-llc/4936/14552171
+
+  jumper_full_hole:
+    # Area to be fully cut out, will be built up again, this includes where supports will be added
     - what: rectangle
-      size: [wall_width + 5, link_cable_hole_size]
+      size: [jumper_depth + jumper_depth_extra_inside + jumper_support_depth + (wall_width - wall_width_inset), jumper_width]
+      #TODO: Position
       adjust:
         ref: matrix_inner_top
         shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + 7]
+  jumper_hole_to_cover_supports:
+    # Area that covers where the jumper plastic and the supports are
+    - what: rectangle
+      size: [jumper_depth + 2 * jumper_support_depth, jumper_width]
+      #TODO: Position
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 7 + wall_width - (wall_width - wall_width_inset) - sx/2, .5py - pico_h + 7]
+  jumper_supports_edges:
+    # Supports in the thickness direction, full thickness
+    # Bottom right
+    - what: rectangle
+      size: [jumper_support_depth, jumper_support_depth]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 7 + wall_width_inset - sx/2, .5py - pico_h + 7 - jumper_width/2 + sy/2]
+    # Top right
+    - what: rectangle
+      size: [jumper_support_depth, jumper_support_depth]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 7 + wall_width_inset - sx/2, .5py - pico_h + 7 + jumper_width/2 - sy/2]
+    # Top right
+    - what: rectangle
+      size: [jumper_support_depth, jumper_support_depth]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 7 + wall_width_inset - sx * 1.5 - jumper_depth, .5py - pico_h + 7 - jumper_width/2 + sy/2]
+    # Top right
+    - what: rectangle
+      size: [jumper_support_depth, jumper_support_depth]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 7 + wall_width_inset - sx * 1.5 - jumper_depth, .5py - pico_h + 7 + jumper_width/2 - sy/2]
+  jumper_supports_lip:
+    # Supports that run along the whole length of the jumper, small thickness
+    # Right
+    - what: rectangle
+      size: [jumper_support_depth, jumper_width - 2 * jumper_support_depth]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 7 + wall_width_inset - sx/2, .5py - pico_h + 7]
+    # Left
+    - what: rectangle
+      size: [jumper_support_depth, jumper_width - 2 * jumper_support_depth]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_w + 7 + wall_width_inset - sx * 1.5 - jumper_depth, .5py - pico_h + 7]
+
   clip_walls_cut:
     # Inner top (next to pico)
     - what: rectangle
@@ -428,6 +487,10 @@ outlines:
   wall:
     - "_border_plus_wall"
     - "-border"
+  jumper_test:
+    - "_border_plus_wall"
+    - "-jumper_hole_to_cover_supports"
+    #- "jumper_supports_lip"
   wall_inset:
     - "_border_plus_wall_inset"
     - "-border"
@@ -487,12 +550,16 @@ cases:
       extrude: wall_thickness
       operation: subtract
 
-    # Hole for link cable (Remove the hole then add back the plate above it)
-    - name: link_cable_hole
-      extrude: choc_grip_thickness + link_cable_hole_size
+    # Hole for jumper pins for link cable
+    - name: jumper_full_hole # Remove the hole area
+      extrude: wall_thickness
       operation: subtract
-    - name: link_cable_hole
+    - name: jumper_full_hole # Add it back in thinner
       extrude: choc_grip_thickness
+    - name: jumper_supports_edges # add supports to edges
+      extrude: choc_grip_thickness + jumper_thickness
+    - name: jumper_supports_lip
+      extrude: choc_grip_thickness + jumper_support_thickness
 
     # Holes for case closer clips
     - name: clip_walls_cut
@@ -534,7 +601,9 @@ cases:
       extrude: wall_thickness
       operation: subtract
 
-    # TODO link cable??
+    # Hole for jumper pins for link cable (Remove the hole then add back the plate above it then and supports)
+    - name: jumper_hole_to_cover_supports
+      extrude: wall_thickness - choc_grip_thickness - jumper_thickness
 
     # Hole for plugging a usb cable in to the pico
     - name: pico_usb_plug_hole
