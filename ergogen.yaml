@@ -393,25 +393,25 @@ outlines:
       size: [jumper_support_depth, jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width_inset - sx/2, .5py - pico_h + 7 - jumper_width/2 + sy/2]
+        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + 7 - jumper_width/2 + sy/2]
     # Top right
     - what: rectangle
       size: [jumper_support_depth, jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width_inset - sx/2, .5py - pico_h + 7 + jumper_width/2 - sy/2]
+        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + 7 + jumper_width/2 - sy/2]
     # Top right
     - what: rectangle
       size: [jumper_support_depth, jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width_inset - sx * 1.5 - jumper_depth, .5py - pico_h + 7 - jumper_width/2 + sy/2]
+        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + 7 - jumper_width/2 + sy/2]
     # Top right
     - what: rectangle
       size: [jumper_support_depth, jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width_inset - sx * 1.5 - jumper_depth, .5py - pico_h + 7 + jumper_width/2 - sy/2]
+        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + 7 + jumper_width/2 - sy/2]
   jumper_supports_lip:
     # Supports that run along the whole length of the jumper, small thickness
     # Right
@@ -419,13 +419,13 @@ outlines:
       size: [jumper_support_depth, jumper_width - 2 * jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width_inset - sx/2, .5py - pico_h + 7]
+        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + 7]
     # Left
     - what: rectangle
       size: [jumper_support_depth, jumper_width - 2 * jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width_inset - sx * 1.5 - jumper_depth, .5py - pico_h + 7]
+        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + 7]
 
   clip_walls_cut:
     # Inner top (next to pico)
