@@ -78,6 +78,7 @@ units:
   jumper_depth_extra_inside: 3 # Extra depth inside the case for the ends of the header pins
   jumper_support_depth: 1 # How long of a support we can put on either side to hold it in place without getting in the way of the pins/cable end
   jumper_support_thickness: .8 # How thick the support should be (going towards the pins on each side) (Rounded down from .9)
+  jumper_y_offset: -12
 
   #Clip for holding sides together
   clip_wall_cut: wall_width - wall_width_inset
@@ -212,6 +213,12 @@ outlines:
       adjust:
         ref: matrix_inner_top
         shift: [.5px + pico_left_gap + sx / 2 - 2, .5py - sy/2]
+    #Between pico and jumper holes
+    - what: rectangle
+      size: [8, 10]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + pico_left_gap + pico_w + 2 - sx/2, .5py - (pico_h + 4) + sy/2 - 10]
   _pico_posts_template:
     #Template for the location that the posts to mount the pico
     #Template because we want to use this multiple times with different radius
@@ -377,7 +384,7 @@ outlines:
       #TODO: Position
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + 7]
+        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + jumper_y_offset]
   jumper_hole_to_cover_supports:
     # Area that covers where the jumper plastic and the supports are
     - what: rectangle
@@ -385,7 +392,7 @@ outlines:
       #TODO: Position
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - (wall_width - wall_width_inset) - sx/2, .5py - pico_h + 7]
+        shift: [.5px + pico_w + 7 + wall_width - (wall_width - wall_width_inset) - sx/2, .5py - pico_h + jumper_y_offset]
   jumper_supports_edges:
     # Supports in the thickness direction, full thickness
     # Bottom right
@@ -393,25 +400,25 @@ outlines:
       size: [jumper_support_depth, jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + 7 - jumper_width/2 + sy/2]
+        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + jumper_y_offset - jumper_width/2 + sy/2]
     # Top right
     - what: rectangle
       size: [jumper_support_depth, jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + 7 + jumper_width/2 - sy/2]
+        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + jumper_y_offset + jumper_width/2 - sy/2]
     # Top right
     - what: rectangle
       size: [jumper_support_depth, jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + 7 - jumper_width/2 + sy/2]
+        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + jumper_y_offset - jumper_width/2 + sy/2]
     # Top right
     - what: rectangle
       size: [jumper_support_depth, jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + 7 + jumper_width/2 - sy/2]
+        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + jumper_y_offset + jumper_width/2 - sy/2]
   jumper_supports_lip:
     # Supports that run along the whole length of the jumper, small thickness
     # Right
@@ -419,27 +426,27 @@ outlines:
       size: [jumper_support_depth, jumper_width - 2 * jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + 7]
+        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + jumper_y_offset]
     # Left
     - what: rectangle
       size: [jumper_support_depth, jumper_width - 2 * jumper_support_depth]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + 7]
+        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + jumper_y_offset]
 
   clip_walls_cut:
-    # Inner top (next to pico)
+    # Inner top (top of pico)
     - what: rectangle
       size: [clip_wall_cut, clip_wall_length]
       adjust:
         ref: matrix_inner_top
         shift: [.5px + pico_w + 7 + wall_width_inset + clip_wall_cut/2, .5py - 10]
-    # Inner bottom (below link cable hole)
+    # Inner bottom (above link cable hole)
     - what: rectangle
       size: [clip_wall_cut, clip_wall_length]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width_inset + clip_wall_cut/2, .5py - pico_h - 14]
+        shift: [.5px + pico_w + 7 + wall_width_inset + clip_wall_cut/2, .5py - pico_h]
     # Outer top
     - what: rectangle
       size: [clip_wall_cut, clip_wall_length]
@@ -465,7 +472,7 @@ outlines:
       size: [wall_width + clip_wall_inset, clip_wall_length]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + (wall_width - clip_wall_inset) /2 , .5py - pico_h - 14]
+        shift: [.5px + pico_w + 7 + (wall_width - clip_wall_inset) /2 , .5py - pico_h]
     # Outer top
     - what: rectangle
       size: [wall_width + clip_wall_inset, clip_wall_length]
@@ -490,7 +497,7 @@ outlines:
   jumper_test:
     - "_border_plus_wall"
     - "-jumper_hole_to_cover_supports"
-    #- "jumper_supports_lip"
+    - "-clip_walls_cut"
   wall_inset:
     - "_border_plus_wall_inset"
     - "-border"
