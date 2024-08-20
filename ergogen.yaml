@@ -496,6 +496,7 @@ outlines:
     - "-border"
   jumper_test:
     - "_border_plus_wall"
+    - "-jumper_supports_edges"
     - "-jumper_hole_to_cover_supports"
     - "-clip_walls_cut"
   wall_inset:
@@ -608,7 +609,13 @@ cases:
       extrude: wall_thickness
       operation: subtract
 
-    # Hole for jumper pins for link cable (Remove the hole then add back the plate above it then and supports)
+    # Jumper pins stuff
+    - name: jumper_full_hole # Remove the hole area
+      extrude: wall_thickness
+      operation: subtract
+    - name: jumper_full_hole # Add it back in thinner
+      extrude: bottom_thickness_under_pico
+    # Make it thicker just for the supports
     - name: jumper_hole_to_cover_supports
       extrude: wall_thickness - choc_grip_thickness - jumper_thickness
 
