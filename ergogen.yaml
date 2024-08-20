@@ -78,15 +78,16 @@ units:
   jumper_depth_extra_inside: 3 # Extra depth inside the case for the ends of the header pins
   jumper_support_depth: 1 # How long of a support we can put on either side to hold it in place without getting in the way of the pins/cable end
   jumper_support_thickness: .8 # How thick the support should be (going towards the pins on each side) (Rounded down from .9)
-  jumper_y_offset: -12
+  jumper_y_offset: -10
 
   #Clip for holding sides together
   clip_wall_cut: wall_width - wall_width_inset
   clip_wall_inset: 1 #How much grip area on the inside of the wall
   clip_wall_bottom_thickness: 1.2
   clip_wall_length: 5
-  # Thumb Variables
-  thumbsplay: -13
+  # Individual finger Variables
+  thumbsplay: -10
+  pinkysplay: 8
 points:
   zones:
     matrix:
@@ -95,8 +96,11 @@ points:
         spread: 1kx
       columns:
         pinky:
+          key.splay: pinkysplay
         ring:
-          key.stagger: 21
+          key.stagger: 23
+          key.splay: -pinkysplay
+          key.spread: kx + 1
         middle:
           key.stagger: 8
         index:
@@ -110,16 +114,16 @@ points:
     thumbfan:
       anchor:
         ref: matrix_inner_bottom
-        shift: [2, -23]
+        shift: [0, -20]
       columns:
         near:
           key.splay: thumbsplay - 4
         home:
-          key.spread: 19.25
+          key.spread: 18.25
           key.splay: thumbsplay
           key.origin: [-9.5, -6]
         far:
-          key.spread: 19.25
+          key.spread: 18.25
           key.splay: thumbsplay
           key.origin: [-9.5, -6]
       rows:
@@ -156,12 +160,15 @@ outlines:
           shift: [-.5px, .5py]
         - ref: matrix_inner_top
           shift: [.5px, .5py]
-        # Add space for the pi pico
+        # Add space for the pi pico (Disable these two and enable the one after for testplate)
         - ref: matrix_inner_top
           shift: [.5px + pico_w + 7, .5py]
         - ref: matrix_inner_top
-          shift: [.5px + pico_w + 7, .5py - pico_h - 23]
-        # End of space
+          shift: [.5px + pico_w + 7, .5py - pico_h - 18]
+        # End of space, start of fixup if it is off
+        #- ref: matrix_inner_bottom
+        #  shift: [.5px, -.5py]
+        # Endof fixup
         - ref: thumbfan_far_thumb
           shift: [.5px, .5py]
         - ref: thumbfan_far_thumb
@@ -218,7 +225,7 @@ outlines:
       size: [8, 10]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_w + 2 - sx/2, .5py - (pico_h + 4) + sy/2 - 10]
+        shift: [.5px + pico_left_gap + pico_w + 2 - sx/2, .5py - (pico_h + 4) + sy/2 - 8]
   _pico_posts_template:
     #Template for the location that the posts to mount the pico
     #Template because we want to use this multiple times with different radius
@@ -392,7 +399,7 @@ outlines:
       #TODO: Position
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - (wall_width - wall_width_inset) - sx/2, .5py - pico_h + jumper_y_offset]
+        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + jumper_y_offset]
   jumper_supports_edges:
     # Supports in the thickness direction, full thickness
     # Bottom right
@@ -446,7 +453,7 @@ outlines:
       size: [clip_wall_cut, clip_wall_length]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width_inset + clip_wall_cut/2, .5py - pico_h]
+        shift: [.5px + pico_w + 7 + wall_width_inset + clip_wall_cut/2, .5py - pico_h + 2]
     # Outer top
     - what: rectangle
       size: [clip_wall_cut, clip_wall_length]
@@ -472,7 +479,7 @@ outlines:
       size: [wall_width + clip_wall_inset, clip_wall_length]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + (wall_width - clip_wall_inset) /2 , .5py - pico_h]
+        shift: [.5px + pico_w + 7 + (wall_width - clip_wall_inset) /2 , .5py - pico_h + 2]
     # Outer top
     - what: rectangle
       size: [wall_width + clip_wall_inset, clip_wall_length]
@@ -515,6 +522,10 @@ outlines:
     - "_border_plus_wall_inset"
     - "-pico_usb_plug_hole"
 cases:
+  testplate:
+    # Plate that switches clip in to + thicker at areas it can be
+    - name: plate
+      extrude: choc_grip_thickness
   plate:
     # Plate that switches clip in to + thicker at areas it can be
     - name: plate
