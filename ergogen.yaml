@@ -87,7 +87,7 @@ units:
   clip_wall_length: 5
   # Individual finger Variables
   thumbsplay: -10
-  pinkysplay: 8
+  pinkysplay: 12
 points:
   zones:
     matrix:
@@ -100,7 +100,7 @@ points:
         ring:
           key.stagger: 23
           key.splay: -pinkysplay
-          key.spread: kx + 1
+          key.spread: kx + 2
         middle:
           key.stagger: 8
         index:
