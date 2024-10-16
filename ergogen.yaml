@@ -642,3 +642,39 @@ cases:
     - name: clip_plate_cut
       extrude: clip_wall_bottom_thickness
       operation: subtract
+pcbs:
+  pcb:
+    outlines:
+      main:
+        outline: border
+    footprints:
+      choc:
+        what: choc
+        where: true
+        params:
+          keycaps: true
+          reverse: true
+          hotswap: false
+          from: GND
+          to: "{{keynet}}"
+      promicro:
+        what: promicro
+        params:
+          orientation: "up"
+        where:
+          ref: matrix_inner_top
+          shift: [24, -10]
+          rotate: -90
+      trrs:
+        what: trrs
+        params:
+          reverse: true
+          A: "VCC"
+          B: "P0"
+          C: "P1"
+          D: "GND"
+        where:
+          ref: matrix_inner_top
+          shift: [36, -50]
+          rotate: -90
+        
