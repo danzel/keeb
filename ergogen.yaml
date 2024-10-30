@@ -25,9 +25,12 @@ units:
   py: ky + 0
 
   pcb_thickness: 1.6
-  hole_thickness: 1.6
+  hole_thickness: 1.4
   #How thick the bottom "layer" is, this layer is never cut
-  bottom_thickness: 0.2
+  bottom_thickness: 0.4
+
+
+  pcb_padding: 0.1
   #Wall around outside of case
   wall_width: 2
   #on top of the pcb
@@ -37,7 +40,6 @@ units:
   micro_x: 6
   micro_w: 18
   micro_h: 33
-  micro_usb_width: 9
   #reset button
   reset_x: 16
   reset_y: 35
@@ -160,6 +162,10 @@ outlines:
           shift: [.5px, -.5py]
         - ref: matrix_pinky_bottom
           shift: [-.5px, -.5py]
+  _border_pcb_padded:
+    - what: outline
+      name: border
+      expand: pcb_padding
   _border_plus_wall:
     - what: outline
       name: border
@@ -188,13 +194,6 @@ outlines:
       adjust:
         ref: matrix_inner_top
         shift: [.5px + trrs_x + sx/2, .5py - trrs_y - sy/2]
-  usb_wall_gap:
-    #hole for where the usb port comes through the case
-    - what: rectangle
-      size: [micro_usb_width, wall_width]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + micro_x + (micro_w - micro_usb_width) / 2, .5py - sy/2 - wall_width]
 
   switch_pole_holes:
   #holes that the poles on the switches fit through
@@ -230,15 +229,12 @@ outlines:
   plate:
     - "border"
     - "-holes"
+
   wall:
     - "_border_plus_wall"
-    - "-border"
-  wall_without_usb:
-    - "_border_plus_wall"
-    - "-border"
-    - "-usb_wall_gap"
+    - "-_border_pcb_padded"
   base_plate_with_holes:
-    - "border"
+    - "_border_pcb_padded"
     - "-switch_pole_holes"
     - "-header_pin_area"
 cases:
@@ -248,15 +244,14 @@ cases:
       extrude: choc_grip_thickness
   base:
     # Very bottom of the base
-    - name: border
+    - name: _border_pcb_padded
       extrude: bottom_thickness
     
+    # Raised area with holes for all the switch legs and pins etc
     - name: base_plate_with_holes
       extrude: bottom_thickness + hole_thickness
 
     - name: wall
-      extrude: bottom_thickness + hole_thickness + pcb_thickness
-    - name: wall_without_usb
       extrude: bottom_thickness + hole_thickness + pcb_thickness + wall_thickness
 
 pcbs:
