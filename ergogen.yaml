@@ -23,68 +23,33 @@ units:
   # How far to pad out the plate from keycap edges. Walls go around this
   px: kx + 0
   py: ky + 0
-  # Gap between case and base to allow for wiring
-  wiring_thickness: 1.6
-  # Bottom base - This will have .15 layer height (initial layer .2)
-  # Layer height decided because of the choc leg thickness.
-  # Bottom thickness has to be adjusted in 0.6 increments. 0.35 seems too thin so 0.95 it is
-  # Note that the legs are shorter than the wire legs on the switches, so the wire legs will need to be trimmed
-  bottom_thickness: 0.6
-  bottom_thick_thickness: 2.0
-  bottom_thickness_under_pico: 1.0
-  # Wall around outside of case
-  wall_width: 4
-  wall_width_inset: 2  # width at the bottom, allowing some overlap with the base
-  wall_thickness: choc_thick_thickness + wiring_thickness + bottom_thick_thickness
-  wall_thickness_inset: wall_thickness - bottom_thick_thickness
-  # Pi Pico Variables
-  pico_w: 21
-  pico_h: 51
-  pico_hole_offset_x: 4.8
-  pico_hole_offset_y: 2
-  pico_hole_diameter: 2.1 - .1 # Actually 2.1, smaller to try not tear them off
-  pico_hole_clearance_diameter: 3.8
-  pico_hole_x_distance: pico_w - 2 * pico_hole_offset_x
-  pico_hole_y_distance: pico_h - 2 * pico_hole_offset_y
-  pico_usb_width: 8.2 # Rounded up from 8
-  pico_usb_height_on_pcb: 4.3 + .3 # Measured as 4.3
-  pico_usb_plug_width: 16
-  pico_pcb_thickness: 1
-  pico_usb_stickout: 1.3
-  # Where the reset button is from the edge of the PCB, roughly measured in freecad
-  pico_reset_x: 5.4 - 0.3 #5.4
-  pico_reset_y: 9.87 - 0.3 #9.87
-  pico_reset_width: 3.2 + 0.6 # 3.2
-  pico_reset_height: 4.25 + 0.6 # 4.25
-  # Pi Pico related numbers
-  # the tallest component on the pico other than the reset button and USB is 1.25mm high, round that up to nearest .2 (case layer height)
-  pico_thickness_above_gap: 1.4 # ^^
-  pico_left_gap: 1 # How far left to move from the top left of the flat box
-  pico_top_gap: 0.5 # TODO: May need some top padding
-  # holes and poles that hold the layers apart. Numbers stolen from pico_hole_diameter
-  throughpost_pole_radius: 1
-  throughpost_support_radius: 1.8
-  throughpost_hole_radius: throughpost_pole_radius + 0.1
-  throughpost_x_move: 0.34
-  throughpost_support_top: 3.2 # These two need to add up to wall_thickness
-  throughpost_support_bottom: 2.6
 
-  #hole and support for the jumper header for the link cable
-  # Size is for a 4 block of jumpers (.1" pins)
-  # That can be connected with this https://www.digikey.co.nz/en/products/detail/adafruit-industries-llc/4936/14552171
-  jumper_width: 10.5 # Going along the edge of the wall
-  jumper_thickness: 2.6 # Going from desk to sky (Rounded up from 2.5)
-  jumper_depth: 2.7 # Going from wall in to the case, the plug is thicker than the pins
-  jumper_depth_extra_inside: 3 # Extra depth inside the case for the ends of the header pins
-  jumper_support_depth: 1 # How long of a support we can put on either side to hold it in place without getting in the way of the pins/cable end
-  jumper_support_thickness: .8 # How thick the support should be (going towards the pins on each side) (Rounded down from .9)
-  jumper_y_offset: -10
+  pcb_thickness: 1.6
+  hole_thickness: 1.6
+  #How thick the bottom "layer" is, this layer is never cut
+  bottom_thickness: 0.2
+  #Wall around outside of case
+  wall_width: 2
+  #on top of the pcb
+  wall_thickness: 1
 
-  #Clip for holding sides together
-  clip_wall_cut: wall_width - wall_width_inset
-  clip_wall_inset: 1 #How much grip area on the inside of the wall
-  clip_wall_bottom_thickness: 1.2
-  clip_wall_length: 5
+  # Micro Variables
+  micro_x: 6
+  micro_w: 18
+  micro_h: 33
+  micro_usb_width: 9
+  #reset button
+  reset_x: 16
+  reset_y: 35
+  reset_w: 9
+  reset_h: 7
+
+  trrs_x: 15
+  trrs_y: 53
+  trrs_w: 14
+  trrs_h: 9
+
+
   # Individual finger Variables
   thumbsplay: -10
   pinkysplay: 12
@@ -162,9 +127,9 @@ outlines:
           shift: [.5px, .5py]
         # Add space for the pi pico (Disable these two and enable the one after for testplate)
         - ref: matrix_inner_top
-          shift: [.5px + pico_w + 7, .5py]
+          shift: [.5px + 21 + 7, .5py]
         - ref: matrix_inner_top
-          shift: [.5px + pico_w + 7, .5py - pico_h - 18]
+          shift: [.5px + 21 + 7, .5py - 51 - 18]
         # End of space, start of fixup if it is off
         #- ref: matrix_inner_bottom
         #  shift: [.5px, -.5py]
@@ -199,160 +164,38 @@ outlines:
     - what: outline
       name: border
       expand: wall_width
-  _border_plus_wall_inset:
-    - what: outline
-      name: border
-      expand: wall_width_inset
   holes:
-  #holes that the switches fit through
+    #holes that the switches fit through
     - what: rectangle
       where: true
       size: [13.8, 13.8]
-  wideholes:
-  #holes the switches and clips fit through, used to make the plate thicker where it can be
+  header_pin_area:
+    #Area around the micro that is thinner than the rest of the plate to give room for header pins
     - what: rectangle
-      where: true
-      size: [14.7, 13.8]
-  pico_thin_area:
-    #Area around the pico that is thinner than the rest of the plate to give room for wiring
+      size: [micro_w, micro_h]
+      adjust:
+        ref: matrix_inner_top
+        shift: [.5px + micro_x + sx / 2, .5py - .1 - sy/2]
+    #Under reset button
     - what: rectangle
-      size: [pico_w + 4, pico_h + 4]
+      size: [reset_w, reset_h]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + sx / 2 - 2, .5py - sy/2]
-    #Between pico and jumper holes
+        shift: [.5px + reset_x + sx / 2, .5py - reset_y - sy/2]
+    #Under TRRS
     - what: rectangle
-      size: [8, 10]
+      size: [trrs_w, trrs_h]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_w + 2 - sx/2, .5py - (pico_h + 4) + sy/2 - 8]
-  _pico_posts_template:
-    #Template for the location that the posts to mount the pico
-    #Template because we want to use this multiple times with different radius
-    $params: [__r__]
-    top_left:
-      what: circle
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_hole_offset_x, .5py - pico_hole_offset_y - pico_top_gap]
-      radius: __r__
-    top_right:
-      what: circle
-      adjust:
-        ref: matrix_inner_top
-        shift: [0.5px + pico_left_gap + pico_hole_offset_x + pico_hole_x_distance, .5py - pico_hole_offset_y - pico_top_gap]
-      radius: __r__
-    bottom_left:
-      what: circle
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_hole_offset_x, .5py - pico_hole_offset_y - pico_top_gap - pico_hole_y_distance]
-      radius: __r__
-    bottom_right:
-      what: circle
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_hole_offset_x + pico_hole_x_distance, .5py - pico_hole_offset_y - pico_top_gap - pico_hole_y_distance]
-      radius: __r__
-  pico_mounting_posts:
-    $extends: outlines._pico_posts_template
-    $args: [pico_hole_diameter/2]
-  pico_mounting_posts_wider:
-    #wider version for the base holes, if they are the same size they don't fit together
-    $extends: outlines._pico_posts_template
-    $args: [pico_hole_diameter/2 + 0.1]
-  pico_mounting_supports:
-    $extends: outlines._pico_posts_template
-    $args: [pico_hole_clearance_diameter/2]
-  pico_usb_hole:
+        shift: [.5px + trrs_x + sx/2, .5py - trrs_y - sy/2]
+  usb_wall_gap:
     #hole for where the usb port comes through the case
     - what: rectangle
-      size: [pico_usb_width, pico_usb_height_on_pcb + pico_top_gap + wall_width]
+      size: [micro_usb_width, wall_width]
       adjust:
         ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_w / 2, .5py - sy/2 + wall_width]
-  pico_usb_plug_hole:
-    #hole for where the usb plug plugs in to the pico connector, this needs to go through everything
-    - what: rectangle
-      size: [pico_usb_plug_width, pico_top_gap + wall_width - pico_usb_stickout]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_w / 2, .5py - sy/2 + wall_width]
+        shift: [.5px + micro_x + (micro_w - micro_usb_width) / 2, .5py - sy/2 - wall_width]
 
-  pico_reset_hole:
-    #hole for where the reset button comes through the case
-    #Can't just mirror this part because the it is offset, need a case export with each of the below
-    - what: rectangle
-      size: [pico_reset_width, pico_reset_height]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_reset_x + sx/2, .5py - pico_top_gap - pico_reset_y - sy/2]
-    - what: rectangle
-      size: [pico_reset_width, pico_reset_height]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_left_gap + pico_w - pico_reset_x - sx/2, .5py - pico_top_gap - pico_reset_y - sy/2]
-  _throughposts_template:
-    #Template for the location that the posts that hold the case and base apart
-    #Template because we want to use this multiple times with different radius
-    $params: [__r__]
-    pink_top:
-      what: circle
-      adjust:
-        ref: matrix_pinky_top
-        shift: [.5px - throughpost_x_move, -.5py]
-      radius: __r__
-    ring_top:
-      what: circle
-      adjust:
-        ref: matrix_ring_top
-        shift: [.5px - throughpost_x_move, -.5py]
-      radius: __r__
-    ring_home:
-      what: circle
-      adjust:
-        ref: matrix_ring_home
-        shift: [.5px - throughpost_x_move, -.5py]
-      radius: __r__
-    middle_top:
-      what: circle
-      adjust:
-        ref: matrix_middle_top
-        shift: [.5px - throughpost_x_move, -.5py]
-      radius: __r__
-    middle_home:
-      what: circle
-      adjust:
-        ref: matrix_middle_home
-        shift: [.5px - throughpost_x_move, -.5py]
-      radius: __r__
-    index_top:
-      what: circle
-      adjust:
-        ref: matrix_index_top
-        shift: [.5px - throughpost_x_move, -.5py]
-      radius: __r__
-    index_home:
-      what: circle
-      adjust:
-        ref: matrix_index_home
-        shift: [.5px - throughpost_x_move, -.5py]
-      radius: __r__
-    near_thumb:
-      what: circle
-      adjust:
-        ref: thumbfan_near_thumb
-        shift: [.5px - throughpost_x_move, .5py]
-      radius: __r__
-  throughpost_post:
-    $extends: outlines._throughposts_template
-    $args: [throughpost_pole_radius]
-  throughpost_support:
-    $extends: outlines._throughposts_template
-    $args: [throughpost_support_radius]
-  throughpost_hole:
-    $extends: outlines._throughposts_template
-    $args: [throughpost_hole_radius]
   switch_pole_holes:
   #holes that the poles on the switches fit through
     - what: circle
@@ -384,264 +227,38 @@ outlines:
       adjust:
         shift: [-choc_side_pin_x_offset, -choc_side_pin_y_offset]
 
-  jumper_full_hole:
-    # Area to be fully cut out, will be built up again, this includes where supports will be added
-    - what: rectangle
-      size: [jumper_depth + jumper_depth_extra_inside + jumper_support_depth + (wall_width - wall_width_inset), jumper_width]
-      #TODO: Position
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + jumper_y_offset]
-  jumper_hole_to_cover_supports:
-    # Area that covers where the jumper plastic and the supports are
-    - what: rectangle
-      size: [jumper_depth + 2 * jumper_support_depth, jumper_width]
-      #TODO: Position
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + jumper_y_offset]
-  jumper_supports_edges:
-    # Supports in the thickness direction, full thickness
-    # Bottom right
-    - what: rectangle
-      size: [jumper_support_depth, jumper_support_depth]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + jumper_y_offset - jumper_width/2 + sy/2]
-    # Top right
-    - what: rectangle
-      size: [jumper_support_depth, jumper_support_depth]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + jumper_y_offset + jumper_width/2 - sy/2]
-    # Top right
-    - what: rectangle
-      size: [jumper_support_depth, jumper_support_depth]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + jumper_y_offset - jumper_width/2 + sy/2]
-    # Top right
-    - what: rectangle
-      size: [jumper_support_depth, jumper_support_depth]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + jumper_y_offset + jumper_width/2 - sy/2]
-  jumper_supports_lip:
-    # Supports that run along the whole length of the jumper, small thickness
-    # Right
-    - what: rectangle
-      size: [jumper_support_depth, jumper_width - 2 * jumper_support_depth]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx/2, .5py - pico_h + jumper_y_offset]
-    # Left
-    - what: rectangle
-      size: [jumper_support_depth, jumper_width - 2 * jumper_support_depth]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width - sx * 1.5 - jumper_depth, .5py - pico_h + jumper_y_offset]
-
-  clip_walls_cut:
-    # Inner top (top of pico)
-    - what: rectangle
-      size: [clip_wall_cut, clip_wall_length]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width_inset + clip_wall_cut/2, .5py - 10]
-    # Inner bottom (above link cable hole)
-    - what: rectangle
-      size: [clip_wall_cut, clip_wall_length]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + wall_width_inset + clip_wall_cut/2, .5py - pico_h + 2]
-    # Outer top
-    - what: rectangle
-      size: [clip_wall_cut, clip_wall_length]
-      adjust:
-        ref: matrix_pinky_top
-        shift: [-.5px - wall_width_inset - clip_wall_cut/2, .5py - 8]
-    # Outer bottom
-    - what: rectangle
-      size: [clip_wall_cut, clip_wall_length]
-      adjust:
-        ref: matrix_pinky_top
-        shift: [-.5px - wall_width_inset - clip_wall_cut/2, .5py - 44]
-  clip_plate_cut:
-    #TODO: There is a good chance the math in here is wrong but it works because variables are the same
-    # Inner top (next to pico)
-    - what: rectangle
-      size: [wall_width + clip_wall_inset, clip_wall_length]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + (wall_width - clip_wall_inset) /2 , .5py - 10]
-    # Inner bottom (below link cable hole)
-    - what: rectangle
-      size: [wall_width + clip_wall_inset, clip_wall_length]
-      adjust:
-        ref: matrix_inner_top
-        shift: [.5px + pico_w + 7 + (wall_width - clip_wall_inset) /2 , .5py - pico_h + 2]
-    # Outer top
-    - what: rectangle
-      size: [wall_width + clip_wall_inset, clip_wall_length]
-      adjust:
-        ref: matrix_pinky_top
-        shift: [-.5px - wall_width_inset + clip_wall_inset/2, .5py - 8]
-    # Outer bottom
-    - what: rectangle
-      size: [wall_width + clip_wall_inset, clip_wall_length]
-      adjust:
-        ref: matrix_pinky_top
-        shift: [-.5px - wall_width_inset + clip_wall_inset/2, .5py - 44]
   plate:
     - "border"
     - "-holes"
-  platethickener:
-    - "border"
-    - "-wideholes"
   wall:
     - "_border_plus_wall"
     - "-border"
-  jumper_test:
+  wall_without_usb:
     - "_border_plus_wall"
-    - "-jumper_supports_edges"
-    - "-jumper_hole_to_cover_supports"
-    - "-clip_walls_cut"
-  wall_inset:
-    - "_border_plus_wall_inset"
     - "-border"
-  wall_outside_inset:
-    - "_border_plus_wall"
-    - "-_border_plus_wall_inset"
-  case_pico_holes:
-    - "pico_usb_hole"
-    - "pico_reset_hole"
-  base_plate_with_switch_holes:
+    - "-usb_wall_gap"
+  base_plate_with_holes:
     - "border"
     - "-switch_pole_holes"
-  test:
-    - "_border_plus_wall_inset"
-    - "-pico_usb_plug_hole"
+    - "-header_pin_area"
 cases:
   testplate:
     # Plate that switches clip in to + thicker at areas it can be
     - name: plate
       extrude: choc_grip_thickness
-  plate:
-    # Plate that switches clip in to + thicker at areas it can be
-    - name: plate
-      extrude: choc_grip_thickness
-    - name: platethickener
-      extrude: choc_thick_thickness
-    
-    # Make the pico thin area thinner by cutting and re-adding (doing this in platethickener didn't work)
-    - name: pico_thin_area
-      extrude: choc_thick_thickness
-      operation: subtract
-    - name: pico_thin_area
-      extrude: choc_grip_thickness
-
-
-    # Wall around the plate, less thick in inset area
-    - name: wall
-      extrude: wall_thickness_inset
-    - name: wall_outside_inset
-      extrude: wall_thickness
-
-    # Mounting poles for the pico
-    - name: pico_mounting_supports
-      extrude: choc_grip_thickness + pico_thickness_above_gap
-    - name: pico_mounting_posts
-      extrude: wall_thickness
-    
-    # Throughposts (top to bottom poles)
-    - name: throughpost_post
-      extrude: wall_thickness
-    - name: throughpost_support
-      extrude: throughpost_support_top
-
-
-    # Holes for pico bits to pop through (USB, Reset)
-    - name: case_pico_holes
-      extrude: wall_thickness_inset
-      operation: subtract 
-    # Hole for plugging a usb cable in to the pico
-    - name: pico_usb_plug_hole
-      extrude: wall_thickness
-      operation: subtract
-
-    # Hole for jumper pins for link cable
-    - name: jumper_full_hole # Remove the hole area
-      extrude: wall_thickness
-      operation: subtract
-    - name: jumper_full_hole # Add it back in thinner
-      extrude: choc_grip_thickness
-    - name: jumper_supports_edges # add supports to edges
-      extrude: choc_grip_thickness + jumper_thickness
-    - name: jumper_supports_lip
-      extrude: choc_grip_thickness + jumper_support_thickness
-
-    # Holes for case closer clips
-    - name: clip_walls_cut
-      extrude: wall_thickness
-      operation: subtract
-    - name: clip_plate_cut
-      extrude: choc_thick_thickness
-      operation: subtract
   base:
-    # Base of the case
+    # Very bottom of the base
     - name: border
       extrude: bottom_thickness
-    - name: base_plate_with_switch_holes
-      extrude: bottom_thick_thickness
-
-    # Make the pico thin area thinner by cutting and re-adding
-    - name: pico_thin_area
-      extrude: bottom_thick_thickness
-      operation: subtract
-    - name: pico_thin_area
-      extrude: bottom_thickness_under_pico
-
-    # Wall around the plate, goes inside the outer wall of the case
-    - name: wall_inset
-      extrude: bottom_thick_thickness
     
-    # Bottom pole support for pico
-    - name: pico_mounting_supports
-      extrude: wall_thickness - choc_grip_thickness - pico_thickness_above_gap - pico_pcb_thickness
-    # Hole where the pico posts come in
-    - name: pico_mounting_posts_wider
-      extrude: wall_thickness - choc_grip_thickness - pico_thickness_above_gap - pico_pcb_thickness
-      operation: subtract
-    
-    # Throughposts (top to bottom poles)
-    - name: throughpost_support
-      extrude: throughpost_support_bottom
-    - name: throughpost_hole
-      extrude: wall_thickness
-      operation: subtract
+    - name: base_plate_with_holes
+      extrude: bottom_thickness + hole_thickness
 
-    # Jumper pins stuff
-    - name: jumper_full_hole # Remove the hole area
-      extrude: wall_thickness
-      operation: subtract
-    - name: jumper_full_hole # Add it back in thinner
-      extrude: bottom_thickness_under_pico
-    # Make it thicker just for the supports
-    - name: jumper_hole_to_cover_supports
-      extrude: wall_thickness - choc_grip_thickness - jumper_thickness
+    - name: wall
+      extrude: bottom_thickness + hole_thickness + pcb_thickness
+    - name: wall_without_usb
+      extrude: bottom_thickness + hole_thickness + pcb_thickness + wall_thickness
 
-    # Hole for plugging a usb cable in to the pico
-    - name: pico_usb_plug_hole
-      extrude: wall_thickness
-      operation: subtract
-
-    # Holes for case closer clips
-    - name: clip_walls_cut
-      extrude: wall_thickness
-      operation: subtract
-    - name: clip_plate_cut
-      extrude: clip_wall_bottom_thickness
-      operation: subtract
 pcbs:
   pcb:
     outlines:
